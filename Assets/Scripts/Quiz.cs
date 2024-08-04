@@ -2,11 +2,14 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System;
 
 public class Quiz : MonoBehaviour
 {
     [Header("Questions")]
-    [SerializeField] QuestionSO question;
+    QuestionSO currentQuestion;
+    [SerializeField] List<QuestionSO> questions = new List<QuestionSO>();
     [SerializeField] TextMeshProUGUI questionText;
     
     [Header("Answers")]
@@ -22,11 +25,22 @@ public class Quiz : MonoBehaviour
     [SerializeField] Image timerImage;
     Timer timer;
 
+    [Header("Scoring")]
+    [SerializeField] TextMeshProUGUI scoreText;
+    ScoreKeeper scoreKeeper;
+
+    [Header("Progress Bar")]
+    [SerializeField] Slider progressBar;
+
+    public bool isComplete = false;
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         timer = FindObjectOfType<Timer>();
-        GetNextQuestion();
+        scoreKeeper = FindObjectOfType<ScoreKeeper>();
+        progressBar.maxValue = questions.Count;
+        progressBar.value = 0;
     }
 
     void Update()
@@ -34,6 +48,11 @@ public class Quiz : MonoBehaviour
         timerImage.fillAmount = timer.GetFillFraction();
         if (timer.GetLoadNextQ())
         {
+            if (progressBar.value == progressBar.maxValue)
+            {
+                isComplete = true;
+                return;
+            }
             GetNextQuestion();
             timer.SetLoadNextQ(false);
         }
@@ -46,9 +65,24 @@ public class Quiz : MonoBehaviour
 
     private void GetNextQuestion()
     {
-        SetButtonInteractability(true);
-        ResetButtonSprites();
-        DisplayQuestionAndAnswers();
+        if (questions.Count > 0)
+        {
+            SetButtonInteractability(true);
+            ResetButtonSprites();
+            GetRandomQuestion();
+            DisplayQuestionAndAnswers();
+            progressBar.value++;
+            scoreKeeper.IncrementQuestionsSeen();
+        }
+    }   
+
+    private void GetRandomQuestion()
+    {
+        int index = UnityEngine.Random.Range(0, questions.Count);
+        currentQuestion = questions.ElementAt(index);
+        if(questions.Contains(currentQuestion))
+            questions.Remove(currentQuestion);
+
     }
 
     private void ResetButtonSprites()
@@ -62,30 +96,35 @@ public class Quiz : MonoBehaviour
 
     private void DisplayQuestionAndAnswers()
     {
-        question.ShuffleAnswers();
-        questionText.text = question.GetQuestion();
+        currentQuestion.ShuffleAnswers();
+        questionText.text = currentQuestion.GetQuestion();
         for (int i = 0; i < answerButtons.Length; i++)
         {
             TextMeshProUGUI buttonText = answerButtons.ElementAt(i).GetComponentInChildren<TextMeshProUGUI>();
-            buttonText.text = question.GetAnswerIndex(i);
+            buttonText.text = currentQuestion.GetAnswerIndex(i);
         }
     }
 
     public void OnAnswerSelected(int answerID)
     {
+        hasAnsweredEarly = true;
         DisplayAnswer(answerID);
         SetButtonInteractability(false);
         timer.CancelTimer();
+        scoreText.text = scoreKeeper.GetCorrectAnswers().ToString() + "/" + scoreKeeper.GetQuestionsSeen().ToString();
     }
 
     private void DisplayAnswer(int answerID)
     {
-        Image correctButtonImage = answerButtons[question.GetCorrectAnswerIndex()].GetComponent<Image>();
+        Image correctButtonImage = answerButtons[currentQuestion.GetCorrectAnswerIndex()].GetComponent<Image>();
         correctButtonImage.sprite = correctAnswerSprite;
         if (answerID < 0) 
             return;
-        if (question.GetAnswerIndex(answerID).Equals(question.GetCorrectAnswer()))
+        if (currentQuestion.GetAnswerIndex(answerID).Equals(currentQuestion.GetCorrectAnswer()))
+        {
             questionText.text = "Correct!";
+            scoreKeeper.IncrementCorrectAnswers();
+        }
         else
         {
             questionText.text = "Wrong!";
