@@ -39,7 +39,7 @@ public class Quiz : MonoBehaviour
     {
         timer = FindObjectOfType<Timer>();
         scoreKeeper = FindObjectOfType<ScoreKeeper>();
-        progressBar.maxValue = questions.Count;
+        progressBar.maxValue = (questions.Count < 10) ? questions.Count : 10;
         progressBar.value = 0;
     }
 
@@ -118,7 +118,7 @@ public class Quiz : MonoBehaviour
     {
         Image correctButtonImage = answerButtons[currentQuestion.GetCorrectAnswerIndex()].GetComponent<Image>();
         correctButtonImage.sprite = correctAnswerSprite;
-        if (answerID < 0) 
+        if (answerID < 0 || answerID >= questions.Count) 
             return;
         if (currentQuestion.GetAnswerIndex(answerID).Equals(currentQuestion.GetCorrectAnswer()))
         {

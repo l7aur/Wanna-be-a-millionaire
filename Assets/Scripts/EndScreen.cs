@@ -13,8 +13,13 @@ public class EndScreen : MonoBehaviour
         scoreKeeper = FindAnyObjectByType<ScoreKeeper>();
     }
 
+    private void Update() //check with awake, one call should be enough not each frame
+    {
+        ShowFinalScore();
+    }
+
     public void ShowFinalScore()
     {
-        finalScoreText.text = "GG!\n" + scoreKeeper.GetScore();
+        finalScoreText.text = "GG!\n" + scoreKeeper.GetScore() + "%";
     }
 }

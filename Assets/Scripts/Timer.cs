@@ -2,19 +2,14 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
-    [SerializeField] float timeToCompleteQuestion = 10f;
-    [SerializeField] float timeToShowCorrectAnswer = 1.5f;
+    [SerializeField] float timeToCompleteQuestion = 20f;
+    [SerializeField] float timeToShowCorrectAnswer = 1f;
     float timerValue;
 
     private bool loadNextQ = true;
     private bool isAnsweringToQ = true;
     private float fillFraction;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        timerValue = timeToCompleteQuestion;
-    }
+    private bool stall = true;
 
     // Update is called once per frame
     void Update()
@@ -24,7 +19,10 @@ public class Timer : MonoBehaviour
 
     void UpdateTimer()
     {
-        timerValue -= Time.deltaTime;
+        if (!stall)
+            timerValue -= Time.deltaTime;
+        else
+            timerValue = timeToCompleteQuestion;
         if (isAnsweringToQ)
         {
             if (timerValue > 0)
@@ -58,4 +56,5 @@ public class Timer : MonoBehaviour
     public bool GetIsAnsweringToQ() { return isAnsweringToQ; }
     public bool GetLoadNextQ() {  return loadNextQ; }
     public void SetLoadNextQ(bool state) { loadNextQ = state; }
+    public void setStall(bool state) { stall = state; }
 }

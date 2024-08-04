@@ -7,16 +7,22 @@ public class GameManager : MonoBehaviour
 {
     Quiz quiz;
     EndScreen endScreen;
+    StartScreen startScreen;
+    Timer timer;
+
     // Start is called before the first frame update
     void Awake()
     {
         quiz = FindObjectOfType<Quiz>();
         endScreen = FindObjectOfType<EndScreen>();
+        startScreen = FindObjectOfType<StartScreen>();
+        timer = FindObjectOfType<Timer>();
     }
 
     void Start()
     {
-        quiz.gameObject.SetActive(true);
+        startScreen.gameObject.SetActive(true);
+        quiz.gameObject.SetActive(false);
         endScreen.gameObject.SetActive(false);
     }
 
@@ -29,6 +35,14 @@ public class GameManager : MonoBehaviour
             endScreen.gameObject.SetActive(true);
         }
     }
+
+    public void OnStartGame()
+    {
+        startScreen.gameObject.SetActive(false);
+        quiz.gameObject.SetActive(true);
+        timer.setStall(false);
+    }
+
     public void OnReplayLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
