@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29004345b9c02bb4c9fbba200df7512f, type: 3}
   m_Name: Question 6
   m_EditorClassIdentifier: 
-  question: Which one of the following is not realted to literature?
+  question: Which one of the following is not related to literature?
   answers:
   - Jose Saramago
   - Mika Waltari
