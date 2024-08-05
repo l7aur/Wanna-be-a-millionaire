@@ -60,7 +60,6 @@ public class Quiz : MonoBehaviour
         }
         else if (!hasAnsweredEarly && !timer.GetIsAnsweringToQ())
         {
-            Debug.Log("gere");
             DisplayAnswer(-1);
             SetButtonInteractability(false);
         }
