@@ -52,9 +52,8 @@ public class Timer : MonoBehaviour
     }
 
     public float GetFillFraction() { return fillFraction; }
-    public float GetTimerValue() { return timerValue; }
     public bool GetIsAnsweringToQ() { return isAnsweringToQ; }
     public bool GetLoadNextQ() {  return loadNextQ; }
     public void SetLoadNextQ(bool state) { loadNextQ = state; }
-    public void setStall(bool state) { stall = state; }
+    public void SetStall(bool state) { stall = state; }
 }

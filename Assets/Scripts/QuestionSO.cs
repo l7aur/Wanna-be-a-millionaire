@@ -20,9 +20,6 @@ public class QuestionSO : ScriptableObject
         scrambledAnswers = answers.OrderBy(x => random.Next()).ToList();
     }
 
-    public string GetQuestion() { return question; }
-    public string GetCorrectAnswer() { return correctAnswer; }
-
     public int GetCorrectAnswerIndex()
     {
         for(int i = 0; i < n; i++)
@@ -43,4 +40,7 @@ public class QuestionSO : ScriptableObject
             return null;
         }
     }
+
+    public string GetQuestion() { return question; }
+    public string GetCorrectAnswer() { return correctAnswer; }
 }
