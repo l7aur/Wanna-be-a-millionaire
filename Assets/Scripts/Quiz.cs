@@ -43,6 +43,8 @@ public class Quiz : MonoBehaviour
     {
         progressBar.maxValue = (questions.Count < 10) ? questions.Count : 10;
         progressBar.value = 0;
+        scoreText.text = "Question #" + (scoreKeeper.GetQuestionsSeen() + 1).ToString() + "\n" +
+            "You have answered correctly to " + scoreKeeper.GetCorrectAnswers().ToString() + " questions!";
     }
 
     void Update()
@@ -122,7 +124,9 @@ public class Quiz : MonoBehaviour
         DisplayAnswer(answerID);
         SetButtonInteractability(false);
         timer.CancelTimer();
-        scoreText.text = scoreKeeper.GetCorrectAnswers().ToString() + "/" + scoreKeeper.GetQuestionsSeen().ToString();
+        scoreText.text = "Question #"
+            + ((scoreKeeper.GetQuestionsSeen() + 1 > progressBar.maxValue) ? progressBar.maxValue : scoreKeeper.GetQuestionsSeen() + 1).ToString() 
+            + "\nYou have answered correctly to " + scoreKeeper.GetCorrectAnswers().ToString() + " questions!";
     }
 
     private void DisplayAnswer(int answerID)

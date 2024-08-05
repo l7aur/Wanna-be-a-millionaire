@@ -14,6 +14,6 @@ public class EndScreen : MonoBehaviour
 
     public void ShowFinalScore()
     {
-        finalScoreText.text = "GG!\n" + scoreKeeper.GetScore() + "%";
+        finalScoreText.text = "GG!\nYou got " + scoreKeeper.GetScore() + " points!";
     }
 }
